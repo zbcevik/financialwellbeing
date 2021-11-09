@@ -1,0 +1,121 @@
+---
+title: 'CAPSTONE PROJECT'
+output:
+  html_document: default
+  word_document: default
+  pdf_document: default
+---
+<center> <h1> Explanatory Data Analysis (EDA) </h1> </center>
+<center>  <h3> [Zeynep Burcu Cevik] </h2> </center>
+<center> <h3> [DHA & 501138112] </h2> </center>
+---
+
+#### 0. Importing dataset 
+```{r}
+
+
+fwb<-read.csv("/Users/zeynepcevik/Desktop/Ryerson/CIND820_Fall/Financial_wellbeing/NFWBS_PUF_2016_data.csv", header=TRUE, sep = ",", stringsAsFactors = FALSE)
+
+```
+
+#### 1. Check the datatypes of the attributes.
+```{r}
+str(fwb[1:90])
+str(fwb[91:180])
+str(fwb[181:217])
+#Since not all the datatypes of the attribute are displayed, I divided the dataset into three parts.
+#However we will not use all of them, because most of the variables are used for some scores such as financial well-being, financial knowledge., etc.
+```
+
+#### 3. Construct a subset from this dataset
+```{r}
+library(dplyr);
+subfwb<-data.frame(fpl=fwb$fpl, FWBscore=fwb$FWBscore, FSscore=fwb$FSscore, LMscore=fwb$LMscore, KHscore=fwb$KHscore, EMPLOY=fwb$EMPLOY, Military_Status=fwb$Military_Status, agecat=fwb$agecat, generation=fwb$generation, PPEDUC=fwb$PPEDUC, PPETHM=fwb$PPETHM, PPGENDER=fwb$PPGENDER, PPHHSIZE=fwb$PPHHSIZE,PPINCIMP= fwb$PPINCIMP, PPMARIT=fwb$PPMARIT, PPMSACAT=fwb$PPMSACAT, PPREG4=fwb$PPREG4, PPREG9=fwb$PPREG9, PPT01=fwb$PPT01, PPT25=fwb$PPT25, PPT612=fwb$PPT612, PPT1317=fwb$PPT1317, PPT18OV=fwb$PPT18OV)
+#Eliminate the participants who refused to respond. 
+#From the data description, among these variables, only in employment and military status attributes, there are non-respondents.
+subfwb<-filter(subfwb, subfwb$EMPLOY !=99 & subfwb$Military_Status !=-1)
+
+```
+
+#### 4. Check the datatypes of the attributes.
+```{r}
+
+str(subfwb)
+```
+
+#### 5. Descriptive statistics of the attributes.
+```{r}
+summary(subfwb)
+any(is.na(subfwb)) #To test whether there are NA's in the dataset or not
+```
+
+#### 6. Some boxplots-nueric variables
+```{r}
+boxplot(subfwb$FWBscore, subfwb$FSscore , data=subfwb)
+boxplot(subfwb$LMscore, subfwb$KHscore, data=subfwb)
+
+```
+
+#### 7. Boxplots
+```{r}
+boxplot(subfwb$FWBscore~subfwb$PPEDUC)
+boxplot(subfwb$FWBscore~subfwb$PPINCIMP)
+boxplot(subfwb$FWBscore~subfwb$PPMARIT)
+boxplot(subfwb$FWBscore~subfwb$PPETHM)
+boxplot(subfwb$FWBscore~subfwb$agecat)
+boxplot(subfwb$FWBscore~subfwb$EMPLOY)
+boxplot(subfwb$FWBscore~subfwb$PPHHSIZE)
+boxplot(subfwb$FWBscore~subfwb$PPREG4)
+boxplot(subfwb$FWBscore~subfwb$FSscore)
+boxplot(subfwb$FWBscore~subfwb$LMscore)
+boxplot(subfwb$FWBscore~subfwb$KHscore)
+boxplot(subfwb$FWBscore~subfwb$PPGENDER)
+
+```
+#### 7. Boxplots
+```{r}
+boxplot(subfwb$FWBscore~subfwb$fpl)
+boxplot(subfwb$FWBscore~subfwb$Military_Status)
+boxplot(subfwb$FWBscore~subfwb$PPT01)
+boxplot(subfwb$FWBscore~subfwb$PPT25)
+
+```
+#### 8. Correlation of non-categorical variables by using Pearson Correlation
+```{r}
+
+subfwb_noncat<-data.frame(subfwb$FWBscore,subfwb$FSscore,subfwb$KHscore)
+cor(subfwb_noncat,use = "complete.obs")
+
+```
+####9. Correlation of categorical variables by using Spearman Correlation
+```{r}
+
+subfwb_cat<-data.frame(subfwb$fpl,subfwb$LMscore,subfwb$EMPLOY, subfwb$Military_Status, subfwb$agecat, subfwb$generation, subfwb$PPEDUC, subfwb$PPETHM, subfwb$PPGENDER, subfwb$PPHHSIZE, subfwb$PPINCIMP, subfwb$PPMARIT, subfwb$PPMSACAT, subfwb$PPREG4, subfwb$PPREG9, subfwb$PPT01, subfwb$PPT25, subfwb$PPT612, subfwb$PPT1317, subfwb$PPT18OV)
+round(cor(subfwb_cat[1:3],use = "complete.obs", method="spearman"),3)
+round(cor(subfwb,use="complete.obs", method="spearman"),4)
+
+
+
+```
+
+####10. Histograms for Quantitative Variables
+```{r}
+
+hist(subfwb$FWBscore,breaks=20)
+hist(subfwb$FSscore)
+hist(subfwb$KHscore)
+
+
+```
+#### 11. Boxplots
+```{r}
+boxplot(subfwb$FSscore~subfwb$PPEDUC)
+boxplot(subfwb$KHscore~subfwb$PPEDUC)
+boxplot(subfwb$PPINCIMP~subfwb$PPETHM)
+boxplot(subfwb$FSscore~subfwb$PPREG4)
+
+
+```
+
+
+
